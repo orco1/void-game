@@ -249,8 +249,10 @@ body::before {
   display: flex;
   align-items: center;
   justify-content: center;
-  touch-action: manipulation;
+  touch-action: none;
   -webkit-tap-highlight-color: transparent;
+  user-select: none;
+  -webkit-user-select: none;
   transition: background 0.08s, box-shadow 0.08s;
   border-radius: 3px;
 }
