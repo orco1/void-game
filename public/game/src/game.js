@@ -287,6 +287,8 @@ function render() {
   ctx.fillStyle = C_BG;
   ctx.fillRect(0, 0, canvas.width, canvas.height);
 
+  if (!grid) return; // not yet initialized — just show the dark background
+
   // ── Cells ──
   for (let cy = 0; cy < ROWS; cy++) {
     for (let cx = 0; cx < COLS; cx++) {
@@ -401,6 +403,6 @@ showOverlay(
   'VOID',
   'DRAW LINES · CLOSE ZONES · DON\'T LET THE MONSTERS TOUCH YOUR TRAIL',
   'START',
-  () => { hideOverlay(); initGame(); gameState = STATE.PLAYING; updateHUD(); }
+  () => { hideOverlay(); initGame(); gameState = STATE.PLAYING; updateHUD(); requestAnimationFrame(loop); }
 );
 requestAnimationFrame(loop);
