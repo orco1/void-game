@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+  <title>VOID</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div id="app">
+
+  <!-- HUD -->
+  <header id="hud">
+    <span class="hud-title">VOID</span>
+
+    <div class="hud-group">
+      <span class="hud-label">LEVEL</span>
+      <span class="hud-val" id="el-level">1</span>
+    </div>
+
+    <div class="hud-group">
+      <span class="hud-label">CAPTURED</span>
+      <span class="hud-val" id="el-pct">0%</span>
+    </div>
+
+    <div class="hud-group">
+      <span class="hud-label">SCORE</span>
+      <span class="hud-val" id="el-score">000000</span>
+    </div>
+
+    <div class="hud-group">
+      <span class="hud-label">LIVES</span>
+      <span class="hud-val" id="el-lives">♥♥♥</span>
+    </div>
+  </header>
+
+  <!-- Progress bar (target 75%) -->
+  <div id="progress-wrap">
+    <div id="pct-bar"></div>
+  </div>
+
+  <!-- Game canvas -->
+  <div id="canvas-wrap">
+    <canvas id="gameCanvas" width="640" height="400"></canvas>
+
+    <!-- Menu / game-over overlay -->
+    <div id="overlay">
+      <h1 id="overlay-title">VOID</h1>
+      <p  id="overlay-sub">DRAW LINES · CLOSE ZONES · DON'T LET THE MONSTERS TOUCH YOUR TRAIL</p>
+
+      <!-- Score submission (shown on game over) -->
+      <div id="score-submit" style="display:none; margin: 0.6rem 0;">
+        <input id="player-name" type="text" maxlength="20" placeholder="YOUR NAME"
+          style="background:#001020; border:1px solid #00CCFF55; color:#00EEFF; padding:0.4rem 0.75rem;
+                 font-family:'Courier New',monospace; font-size:0.8rem; letter-spacing:0.1em;
+                 width:160px; text-align:center; outline:none;" />
+        <button id="submit-score-btn"
+          style="background:#00CCFF; color:#030310; border:none; padding:0.4rem 1rem;
+                 font-family:'Courier New',monospace; font-size:0.8rem; letter-spacing:0.1em;
+                 font-weight:700; cursor:pointer; margin-left:0.4rem;">SUBMIT</button>
+        <div id="submit-status" style="font-size:0.7rem; color:#4488aa; margin-top:0.3rem; letter-spacing:0.08em;"></div>
+      </div>
+
+      <!-- Top-3 leaderboard teaser (shown on game over) -->
+      <div id="leaderboard-teaser" style="display:none; margin:0.5rem 0 0.2rem; font-size:0.72rem;
+           color:#4488aa; letter-spacing:0.08em; line-height:1.8;"></div>
+      <a id="full-lb-link" href="/leaderboard" style="display:none; font-size:0.7rem; color:#00CCFF55;
+         letter-spacing:0.1em; text-decoration:none; margin-bottom:0.3rem;">FULL LEADERBOARD →</a>
+
+      <button id="overlay-btn">START</button>
+    </div>
+  </div>
+
+  <!-- Footer: key hints + D-pad -->
+  <footer id="footer">
+    <div id="key-hints">
+      ARROW KEYS / WASD — MOVE<br>
+      CAPTURE 75% TO ADVANCE
+    </div>
+
+    <div id="dpad" aria-label="D-pad controls">
+      <button class="dpad-btn" id="btn-up"    aria-label="Up">▲</button>
+      <div class="dpad-row">
+        <button class="dpad-btn" id="btn-left"  aria-label="Left">◄</button>
+        <div class="dpad-center"></div>
+        <button class="dpad-btn" id="btn-right" aria-label="Right">►</button>
+      </div>
+      <button class="dpad-btn" id="btn-down"  aria-label="Down">▼</button>
+    </div>
+  </footer>
+
+</div>
+
+<!-- Load order matters — no ES modules needed -->
+<script src="src/grid.js"></script>
+<script src="src/player.js"></script>
+<script src="src/enemy.js"></script>
+<script src="src/game.js"></script>
+</body>
+</html>

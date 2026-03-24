@@ -1,0 +1,269 @@
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Share+Tech+Mono&display=swap');
+
+:root {
+  --bg:         #030310;
+  --panel:      #070718;
+  --border:     #0A1A2A;
+  --cyan:       #00CCFF;
+  --cyan-glow:  #00FFFF;
+  --pink:       #FF2288;
+  --dim:        #2A4455;
+  --text:       #7AADCC;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+html, body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Orbitron', monospace;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  overflow: hidden;
+  user-select: none;
+}
+
+/* Starfield background */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image:
+    radial-gradient(1px 1px at 10% 20%, rgba(0,200,255,0.3) 0%, transparent 100%),
+    radial-gradient(1px 1px at 80% 15%, rgba(0,200,255,0.2) 0%, transparent 100%),
+    radial-gradient(1px 1px at 45% 75%, rgba(0,200,255,0.25) 0%, transparent 100%),
+    radial-gradient(1px 1px at 92% 60%, rgba(0,200,255,0.2) 0%, transparent 100%),
+    radial-gradient(1px 1px at 25% 90%, rgba(0,200,255,0.15) 0%, transparent 100%),
+    radial-gradient(1px 1px at 67% 40%, rgba(0,200,255,0.2) 0%, transparent 100%),
+    radial-gradient(2px 2px at 5%  55%, rgba(0,150,255,0.15) 0%, transparent 100%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+#app {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  position: relative;
+  z-index: 1;
+  width: min(640px, 100vw);
+  padding: 0 4px;
+}
+
+/* ── HUD ─────────────────────────────────────────────────────────────────── */
+#hud {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 16px;
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-bottom: 1px solid #0A2233;
+}
+
+.hud-title {
+  font-size: 20px;
+  font-weight: 900;
+  letter-spacing: 0.45em;
+  color: var(--cyan-glow);
+  text-shadow: 0 0 12px var(--cyan), 0 0 30px rgba(0,200,255,0.4);
+}
+
+.hud-group {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1px;
+}
+
+.hud-label {
+  font-size: 7px;
+  font-weight: 400;
+  letter-spacing: 0.2em;
+  color: var(--dim);
+}
+
+.hud-val {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 16px;
+  color: var(--cyan);
+  text-shadow: 0 0 8px var(--cyan);
+  letter-spacing: 0.05em;
+}
+
+#el-lives { color: var(--pink); text-shadow: 0 0 8px var(--pink); }
+
+/* ── Progress bar ────────────────────────────────────────────────────────── */
+#progress-wrap {
+  width: 100%;
+  height: 3px;
+  background: #050515;
+  border: 1px solid var(--border);
+  position: relative;
+  overflow: hidden;
+}
+
+#pct-bar {
+  height: 100%;
+  width: 0%;
+  background: var(--cyan);
+  box-shadow: 0 0 6px var(--cyan);
+  transition: width 0.2s ease, background 0.3s;
+}
+
+/* Target marker at 75% */
+#progress-wrap::after {
+  content: '';
+  position: absolute;
+  left: 75%;
+  top: 0; bottom: 0;
+  width: 1px;
+  background: rgba(255,255,255,0.4);
+}
+
+/* ── Canvas wrapper ──────────────────────────────────────────────────────── */
+#canvas-wrap {
+  position: relative;
+  width: 100%;
+  border: 1px solid var(--border);
+  box-shadow:
+    0 0 20px rgba(0,150,255,0.08),
+    inset 0 0 30px rgba(0,0,0,0.5);
+  line-height: 0;
+}
+
+#gameCanvas {
+  width: 100%;
+  height: auto;
+  display: block;
+  image-rendering: pixelated;
+}
+
+/* ── Overlay ─────────────────────────────────────────────────────────────── */
+#overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(3, 3, 16, 0.93);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 14px;
+  backdrop-filter: blur(2px);
+}
+
+#overlay.hidden { display: none; }
+
+#overlay-title {
+  font-size: clamp(36px, 10vw, 64px);
+  font-weight: 900;
+  letter-spacing: 0.45em;
+  color: var(--cyan-glow);
+  text-shadow:
+    0 0 20px var(--cyan),
+    0 0 60px rgba(0,200,255,0.5),
+    0 0 120px rgba(0,150,255,0.2);
+  animation: pulse-title 2.5s ease-in-out infinite;
+}
+
+@keyframes pulse-title {
+  0%, 100% { text-shadow: 0 0 20px var(--cyan), 0 0 60px rgba(0,200,255,0.5); }
+  50%       { text-shadow: 0 0 30px var(--cyan), 0 0 90px rgba(0,200,255,0.7), 0 0 140px rgba(0,150,255,0.3); }
+}
+
+#overlay-sub {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: clamp(9px, 2vw, 11px);
+  letter-spacing: 0.15em;
+  color: var(--dim);
+  text-align: center;
+  padding: 0 24px;
+  line-height: 1.7;
+  max-width: 400px;
+}
+
+#overlay-btn {
+  margin-top: 8px;
+  padding: 11px 36px;
+  background: transparent;
+  border: 1px solid var(--cyan);
+  color: var(--cyan);
+  font-family: 'Orbitron', monospace;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.25em;
+  cursor: pointer;
+  text-shadow: 0 0 10px var(--cyan);
+  box-shadow: 0 0 14px rgba(0,200,255,0.15), inset 0 0 14px rgba(0,200,255,0.05);
+  transition: all 0.12s ease;
+  touch-action: manipulation;
+}
+
+#overlay-btn:hover, #overlay-btn:active {
+  background: rgba(0,200,255,0.1);
+  box-shadow: 0 0 24px rgba(0,200,255,0.35), inset 0 0 14px rgba(0,200,255,0.1);
+}
+
+/* ── Controls footer / D-pad ─────────────────────────────────────────────── */
+#footer {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 6px 12px;
+}
+
+#key-hints {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 9px;
+  color: var(--dim);
+  letter-spacing: 0.12em;
+  line-height: 1.8;
+}
+
+/* D-pad */
+#dpad {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+}
+
+.dpad-row {
+  display: flex;
+  gap: 3px;
+}
+
+.dpad-btn {
+  width: 38px;
+  height: 38px;
+  background: var(--panel);
+  border: 1px solid var(--border);
+  color: var(--cyan);
+  font-size: 14px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+  transition: background 0.08s, box-shadow 0.08s;
+  border-radius: 3px;
+}
+
+.dpad-btn:active {
+  background: rgba(0,200,255,0.15);
+  box-shadow: 0 0 10px rgba(0,200,255,0.3);
+}
+
+.dpad-center {
+  width: 38px;
+  height: 38px;
+  background: #030310;
+  border: 1px solid #050520;
+  border-radius: 3px;
+}
